@@ -74,24 +74,92 @@ for (let i = 0; i < galleryItems.length; i += 1) {
   let image = (`
   <li class="gallery__item">
   <a class="gallery__link"
-    href='${original}'"https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg">
+    href='${original}'>
     <img
-      class="gallery__image"
-      src= '${preview}' "https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546__340.jpg"
-      data-source= '${original}' "https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-      alt='${description}'/>
+      class= "gallery__image"
+      src= '${preview}'
+      data-source = '${original}'
+      alt="${description}"
+      data-indx = '${i}'/>
   </a>
 </li>`);
   imgArray.push(image);
-}
+};
 galeryListEl.insertAdjacentHTML('afterbegin', imgArray.join(''));
 
 // Задача 2 - Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
 galeryListEl.addEventListener('click', getUrl);
-function getUrl() {
-  const ulClick = event => {
-  alert(`event.target: ${event.target.id}`);
-    console.log(`event.target: ${event.target}`);
-    return ulClick
+const imgEvent = event => {
+  event.stopPropagation();
 };
+
+let imgUrl = '';
+function getUrl(imgEvent) {
+imgEvent.preventDefault();
+  if (imgEvent.target.nodeName !== 'IMG') { return };
+  imgUrl = imgEvent.target.dataset.source;
+  
+  return imgUrl
+};
+
+    // Задача 3 - Открытие/закрытие модального окна по клику на элементе галереи.
+const lightbox = document.querySelector('div.lightbox');
+const lightboxImg = document.querySelector('.lightbox__image');
+  
+galeryListEl.addEventListener('click', openModal);
+let imgIndx = 0;
+function openModal(imgEvent) {
+   if (imgEvent.target.nodeName !== 'IMG') { return };
+  lightbox.classList.add('is-open');
+  changeImg();
+
+  document.addEventListener("keydown", keyChek);
+
+   imgIndx = Number(imgEvent.target.dataset.indx);
+  console.log(imgIndx)
+  
+};
+
+const closeButton = document.querySelector('.lightbox__button');
+closeButton.addEventListener('click', closeModal);
+function closeModal() {
+    lightbox.classList.remove('is-open');
+  clear()
+    document.removeEventListener("keydown", keyChek);
+};
+
+// Задача 4 - Подмена значения атрибута src элемента img.lightbox__image.
+function changeImg() {
+  lightboxImg.src = imgUrl;
+}
+ 
+// Задача 5 - Очистка значения атрибута src элемента img.lightbox__image. 
+function clear() {
+  lightboxImg.src = '';
+}
+// Дополнительно 1 - Закрытие модального окна по клику на div.lightbox__overlay.
+const modalOverlay = document.querySelector('.lightbox__overlay');
+modalOverlay.addEventListener('click', closeModal);
+// Дополнительно 2 - Закрытие модального окна по нажатию клавиши ESC.
+// Дополнительно 3 - Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
+
+
+function keyChek(event) {
+  if (event.key === 'Escape') {
+    console.log('Esc');
+    closeModal()
+  }
+  else if (event.key === 'ArrowRight') {
+    if (imgIndx + 1 > galleryItems.length - 1) {
+      imgIndx = 0;
+    }
+    imgIndx += 1;
+  }
+  else if (event.key === 'ArrowLeft') {
+    if (imgIndx - 1 < 0 ) {
+      imgIndx = galleryItems.length - 1;
+    }
+    imgIndx += (-1);
+  }
+ console.log(imgIndx)
 }
