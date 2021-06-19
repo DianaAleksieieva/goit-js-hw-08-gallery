@@ -98,8 +98,19 @@ function getUrl(imgEvent) {
 imgEvent.preventDefault();
   if (imgEvent.target.nodeName !== 'IMG') { return };
   imgUrl = imgEvent.target.dataset.source;
-  
+ 
   return imgUrl
+  
+};
+let imgIndx = 0;
+galeryListEl.addEventListener('click', getIndx);
+function getIndx(imgEvent) {
+imgEvent.preventDefault();
+  if (imgEvent.target.nodeName !== 'IMG') { return };
+  imgIndx = Number(imgEvent.target.dataset.indx);
+ console.log(imgIndx)
+  return imgIndx
+  
 };
 
     // Задача 3 - Открытие/закрытие модального окна по клику на элементе галереи.
@@ -107,17 +118,13 @@ const lightbox = document.querySelector('div.lightbox');
 const lightboxImg = document.querySelector('.lightbox__image');
   
 galeryListEl.addEventListener('click', openModal);
-let imgIndx = 0;
 function openModal(imgEvent) {
    if (imgEvent.target.nodeName !== 'IMG') { return };
   lightbox.classList.add('is-open');
-  changeImg();
-
+ 
   document.addEventListener("keydown", keyChek);
-
-   imgIndx = Number(imgEvent.target.dataset.indx);
-  console.log(imgIndx)
-  
+  document.addEventListener("keydown", changeIndx);
+   changeImg();
 };
 
 const closeButton = document.querySelector('.lightbox__button');
@@ -149,17 +156,24 @@ function keyChek(event) {
     console.log('Esc');
     closeModal()
   }
-  else if (event.key === 'ArrowRight') {
+  
+}
+function changeIndx(event) {
+  if (event.key === 'ArrowRight') {
+  
     if (imgIndx + 1 > galleryItems.length - 1) {
       imgIndx = 0;
+      console.log(ArrowRight);
     }
     imgIndx += 1;
   }
   else if (event.key === 'ArrowLeft') {
     if (imgIndx - 1 < 0 ) {
       imgIndx = galleryItems.length - 1;
+      console.log(ArrowLeft);
     }
     imgIndx += (-1);
   }
- console.log(imgIndx)
+  console.log(imgIndx);
+
 }
