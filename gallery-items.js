@@ -66,9 +66,11 @@ const galleryItems = [
 
 
 const galeryListEl = document.querySelector('.gallery');
-
-// Задача 1 - Создание и рендер разметки по массиву данных galleryItems из app.js и предоставленному шаблону.
+const lightbox = document.querySelector('div.lightbox');
+const lightboxImg = document.querySelector('.lightbox__image');
 const imgArray = [];
+let imgIndx = 0;
+
 for (let i = 0; i < galleryItems.length; i += 1) {
   const { preview, original, description} = galleryItems[i];
   let image = (`
@@ -87,34 +89,10 @@ for (let i = 0; i < galleryItems.length; i += 1) {
 };
 galeryListEl.insertAdjacentHTML('afterbegin', imgArray.join(''));
 
-// Задача 2 - Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
-let imgIndx = 0;
-let imgUrl = '';
-galeryListEl.addEventListener('click', getUrl);
-const imgEvent = event => {
-  event.stopPropagation();
-};
-function getUrl(imgEvent) {
-
-  imgEvent.preventDefault();
-  // imgUrl = galleryItems[imgIndx].original
-    
-  imgUrl=imgEvent.target.dataset.source;
-  
-  return imgUrl
-  
-};
-
-
-
-
-    // Задача 3 - Открытие/закрытие модального окна по клику на элементе галереи.
-const lightbox = document.querySelector('div.lightbox');
-const lightboxImg = document.querySelector('.lightbox__image');
-  
 
 galeryListEl.addEventListener('click', openModal);
 function openModal(imgEvent) {
+    imgEvent.preventDefault();
   if (imgEvent.target.nodeName !== 'IMG') { return };
   lightbox.classList.add('is-open');
   imgIndx = parseInt(imgEvent.target.dataset.indx);
@@ -130,20 +108,13 @@ function closeModal() {
     document.removeEventListener("keydown", keyChek);
 };
 
-// Задача 4 - Подмена значения атрибута src элемента img.lightbox__image.
-
- 
-// Задача 5 - Очистка значения атрибута src элемента img.lightbox__image. 
 function clear() {
   lightboxImg.src = '';
-  
+  lightboxImg.alt = '';
 }
-// Дополнительно 1 - Закрытие модального окна по клику на div.lightbox__overlay.
+
 const modalOverlay = document.querySelector('.lightbox__overlay');
 modalOverlay.addEventListener('click', closeModal);
-// Дополнительно 2 - Закрытие модального окна по нажатию клавиши ESC.
-// Дополнительно 3 - Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
-
 
 function keyChek(event) {
   if (event.key === 'Escape') {
@@ -151,15 +122,12 @@ function keyChek(event) {
     closeModal()
   }
    else if (event.key === 'ArrowRight') {
-  
     if (imgIndx + 1 > galleryItems.length - 1) {
       imgIndx = 0;
-      
     }
     else {
       imgIndx += 1
     };
- 
   }
   else if (event.key === 'ArrowLeft') {
     if (imgIndx - 1 < 0) {
@@ -169,10 +137,10 @@ function keyChek(event) {
       imgIndx += (-1);
     }
   }
-
   changeImg()
 }
 
 function changeImg() {
   lightboxImg.src = galleryItems[imgIndx].original;
+  lightboxImg.alt = galleryItems[imgIndx].description;
 }
