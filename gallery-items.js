@@ -107,11 +107,6 @@ function getUrl(imgEvent) {
 
 
 
-function changeImg() {
-  console.log(imgUrl)
-  lightboxImg.src = galleryItems[imgIndx].original;
-  console.log(galleryItems[imgIndx].original)
-}
 
     // Задача 3 - Открытие/закрытие модального окна по клику на элементе галереи.
 const lightbox = document.querySelector('div.lightbox');
@@ -122,16 +117,17 @@ galeryListEl.addEventListener('click', openModal);
 function openModal(imgEvent) {
   if (imgEvent.target.nodeName !== 'IMG') { return };
   lightbox.classList.add('is-open');
- 
+  imgIndx = parseInt(imgEvent.target.dataset.indx);
+  console.log(imgIndx);
   document.addEventListener("keydown", keyChek);
-   changeImg();
+     changeImg();
 };
 
 const closeButton = document.querySelector('.lightbox__button');
 closeButton.addEventListener('click', closeModal);
 function closeModal() {
     lightbox.classList.remove('is-open');
-  clear()
+  clear();
     document.removeEventListener("keydown", keyChek);
 };
 
@@ -141,6 +137,7 @@ function closeModal() {
 // Задача 5 - Очистка значения атрибута src элемента img.lightbox__image. 
 function clear() {
   lightboxImg.src = '';
+  
 }
 // Дополнительно 1 - Закрытие модального окна по клику на div.lightbox__overlay.
 const modalOverlay = document.querySelector('.lightbox__overlay');
@@ -169,9 +166,11 @@ function keyChek(event) {
       console.log(ArrowLeft);
     }
     imgIndx += (-1);
-    
   }
+  console.log(imgIndx)
   changeImg()
-  return imgIndx
 }
-console.log(imgIndx);
+
+function changeImg() {
+  lightboxImg.src = galleryItems[imgIndx].original;
+}
