@@ -118,7 +118,6 @@ function openModal(imgEvent) {
   if (imgEvent.target.nodeName !== 'IMG') { return };
   lightbox.classList.add('is-open');
   imgIndx = parseInt(imgEvent.target.dataset.indx);
-  console.log(imgIndx);
   document.addEventListener("keydown", keyChek);
      changeImg();
 };
@@ -155,19 +154,22 @@ function keyChek(event) {
   
     if (imgIndx + 1 > galleryItems.length - 1) {
       imgIndx = 0;
-      console.log(ArrowRight);
+      
     }
-    imgIndx += 1;
-    
+    else {
+      imgIndx += 1
+    };
+ 
   }
   else if (event.key === 'ArrowLeft') {
-    if (imgIndx - 1 < 0 ) {
-      imgIndx = galleryItems.length - 1;
-      console.log(ArrowLeft);
+    if (imgIndx - 1 < 0) {
+      imgIndx = (galleryItems.length - 1);
     }
-    imgIndx += (-1);
+    else {
+      imgIndx += (-1);
+    }
   }
-  console.log(imgIndx)
+
   changeImg()
 }
 
