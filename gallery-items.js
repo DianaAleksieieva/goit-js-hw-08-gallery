@@ -88,42 +88,42 @@ for (let i = 0; i < galleryItems.length; i += 1) {
 galeryListEl.insertAdjacentHTML('afterbegin', imgArray.join(''));
 
 // Задача 2 - Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
+let imgIndx = 0;
+let imgUrl = '';
 galeryListEl.addEventListener('click', getUrl);
 const imgEvent = event => {
   event.stopPropagation();
 };
-
-let imgUrl = '';
 function getUrl(imgEvent) {
-imgEvent.preventDefault();
-  if (imgEvent.target.nodeName !== 'IMG') { return };
-  imgUrl = imgEvent.target.dataset.source;
- 
+
+  imgEvent.preventDefault();
+  // imgUrl = galleryItems[imgIndx].original
+    
+  imgUrl=imgEvent.target.dataset.source;
+  
   return imgUrl
   
 };
-let imgIndx = 0;
-galeryListEl.addEventListener('click', getIndx);
-function getIndx(imgEvent) {
-imgEvent.preventDefault();
-  if (imgEvent.target.nodeName !== 'IMG') { return };
-  imgIndx = Number(imgEvent.target.dataset.indx);
- console.log(imgIndx)
-  return imgIndx
-  
-};
+
+
+
+function changeImg() {
+  console.log(imgUrl)
+  lightboxImg.src = galleryItems[imgIndx].original;
+  console.log(galleryItems[imgIndx].original)
+}
 
     // Задача 3 - Открытие/закрытие модального окна по клику на элементе галереи.
 const lightbox = document.querySelector('div.lightbox');
 const lightboxImg = document.querySelector('.lightbox__image');
   
+
 galeryListEl.addEventListener('click', openModal);
 function openModal(imgEvent) {
-   if (imgEvent.target.nodeName !== 'IMG') { return };
+  if (imgEvent.target.nodeName !== 'IMG') { return };
   lightbox.classList.add('is-open');
  
   document.addEventListener("keydown", keyChek);
-  document.addEventListener("keydown", changeIndx);
    changeImg();
 };
 
@@ -136,9 +136,7 @@ function closeModal() {
 };
 
 // Задача 4 - Подмена значения атрибута src элемента img.lightbox__image.
-function changeImg() {
-  lightboxImg.src = imgUrl;
-}
+
  
 // Задача 5 - Очистка значения атрибута src элемента img.lightbox__image. 
 function clear() {
@@ -156,16 +154,14 @@ function keyChek(event) {
     console.log('Esc');
     closeModal()
   }
-  
-}
-function changeIndx(event) {
-  if (event.key === 'ArrowRight') {
+   else if (event.key === 'ArrowRight') {
   
     if (imgIndx + 1 > galleryItems.length - 1) {
       imgIndx = 0;
       console.log(ArrowRight);
     }
     imgIndx += 1;
+    
   }
   else if (event.key === 'ArrowLeft') {
     if (imgIndx - 1 < 0 ) {
@@ -173,7 +169,9 @@ function changeIndx(event) {
       console.log(ArrowLeft);
     }
     imgIndx += (-1);
+    
   }
-  console.log(imgIndx);
-
+  changeImg()
+  return imgIndx
 }
+console.log(imgIndx);
